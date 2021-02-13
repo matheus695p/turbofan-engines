@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import pandas as pd
+# import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, r2_score
 
 
@@ -8,7 +10,7 @@ def ls(path):
     return os.listdir(path)
 
 
-def add_remaining_useful_life(df):
+def add_linear_remaining_useful_life(df):
     # obtener el total de numeros de ciclos de cada unidad
     grouped_by_unit = df.groupby(by="unit_nr")
     max_cycle = grouped_by_unit["time_cycles"].max()
@@ -52,3 +54,56 @@ def read_turbofan_dataset(path, prefix):
             data = pd.concat([data, state])
     data.reset_index(drop=True, inplace=True)
     return data
+
+
+def plot_historgram_rul(df):
+    df_max_rul = df[['unit_nr', 'RUL']].groupby('unit_nr').max().reset_index()
+    df_max_rul['RUL'].hist(bins=15, figsize=(15, 7))
+    plt.title('Remining useful life: TurboFan')
+    plt.xlabel('RUL')
+    plt.ylabel('frequency')
+    plt.show()
+
+
+def plot_sensor(df, sensor_name):
+    plt.figure(figsize=(13, 5))
+    for i in df['unit_nr'].unique():
+        if (i % 10 == 0):
+            plt.plot('RUL', sensor_name, data=df[df['unit_nr'] == i])
+    # plt.xlim(250, 0)
+    plt.xticks(np.arange(0, 275, 25))
+    plt.title(f'Remining useful life: {sensor_name}')
+    plt.ylabel(sensor_name)
+    plt.xlabel('Remaining Use fulLife')
+    plt.show()
+
+
+def plot_RUL(df, sensor_name):
+    fig, ax1 = plt.subplots(1, 1, figsize=(13, 5))
+    for i in df['unit_nr'].unique():
+        if (i % 10 == 0):
+            signal = ax1.plot('RUL', sensor_name,
+                              data=df.loc[df['unit_nr'] == i])
+    plt.xlim(250, 0)
+    plt.xticks(np.arange(0, 275, 25))
+    ax1.set_ylabel(sensor_name, labelpad=20)
+    ax1.set_xlabel('RUL', labelpad=20)
+    ax2 = ax1.twinx()
+    rul_line = ax2.plot('RUL', 'RUL', 'k', linewidth=4,
+                        data=df.loc[df['unit_nr'] == 20])
+    data = df.loc[df['unit_nr'] == 20]
+    rul = data["RUL"]
+    rul_line2 = ax2.plot(rul, rul.where(rul <= 125, 125),
+                         '--g', linewidth=4, label='clipped_rul')
+
+    ax2.set_ylabel('RUL', labelpad=20)
+    # ax2.set_ylim(0, 250)
+    ax2.set_yticks(
+        np.linspace(ax2.get_ybound()[0], ax2.get_ybound()[1], 6))
+    ax1.set_yticks(
+        np.linspace(ax1.get_ybound()[0], ax1.get_ybound()[1], 6))
+    ax1.set_title(f'Remining useful life: {sensor_name}')
+    lines = signal+rul_line+rul_line2
+    labels = [line.get_label() for line in lines]
+    ax1.legend(lines, labels, loc=0)
+    plt.show()
