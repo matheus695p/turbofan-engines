@@ -131,4 +131,3 @@ evaluate(y_train_clipped, y_hat_train, 'train')
 
 y_hat_test = svr.predict(x_test_transformed[:, select_features.get_support()])
 evaluate(y_test, y_hat_test)
-evaluate(y_test, y_hat_test)
