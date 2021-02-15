@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller
 from sklearn.metrics import mean_squared_error, r2_score
+from lifelines import KaplanMeierFitter
 
 
 def ls(path):
@@ -367,5 +368,44 @@ def search_nr_lags(intermediate_df, x_train, remaining_sensors, index_names,
     plt.xlabel("Nr de lags")
     plt.ylabel("AIC tasa de cambio")
     plt.title("AIC: grid search")
+    plt.show()
+    plt.close()
+
+
+def kaplan_meier_curve(data):
+    """
+    El análisis de supervivencia es un procedimiento estadístico para el
+    análisis de datos en el que la variable de resultado de interés es el
+    tiempo hasta que ocurre un evento. El tiempo puede ser cualquier tiempo
+    calendario, como años, meses, semanas o días desde el inicio del
+    seguimiento hasta que ocurre un evento. Por evento, nos referimos a
+    recuperación, muerte, avería de una máquina, ventanillas en una entrada o
+    cualquier experiencia de interés designada que pueda sucederle al
+    caso / sujeto.
+
+    El estimador de Kaplan-Meier, también conocido como estimador de
+    límite de producto, es una estadística no paramétrica que se utiliza
+    para estimar la función de supervivencia a partir de datos de por vida.
+    En la investigación médica, a menudo se usa para medir la fracción de
+    pacientes que viven durante una cierta cantidad de tiempo después del
+    tratamiento.
+
+    Parameters
+    ----------
+    data : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    None.
+
+    """
+    plt.figure(figsize=(15, 7))
+    survival = KaplanMeierFitter()
+    survival.fit(data['time_cycles'], data['breakdown'])
+    survival.plot()
+    plt.ylabel("Probabilidad de supervivencia")
+    plt.xlabel("Linea de tiempo")
+    plt.title("Curva Kaplan Meier")
     plt.show()
     plt.close()
