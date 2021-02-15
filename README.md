@@ -24,10 +24,16 @@ $ pip install -r requirements.txt
 │
 ├───codes
 │   ├───baseline
-│   │       main_exploratory_baseline.py
+│   │       exploratory_baseline.py
+│   │       __init__.py
+│   │
+│   ├───survival-analysis
+│   │       survival.py
 │   │       __init__.py
 │   │
 │   └───time-series
+│           lagging_test.py
+│           stationary_lagging.py
 │           __init__.py
 │
 ├───data
@@ -50,5 +56,4 @@ $ pip install -r requirements.txt
 └───src
     │   turbo_fan_module.py
     │   __init__.py
-
 ```
