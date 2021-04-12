@@ -1,7 +1,8 @@
+![Build Status](https://www.repostatus.org/badges/latest/active.svg)
+
 # turbofan-engines-predictive-mantenaince
 end-to-end proyecto de mantenimiento predictivo
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 descripción:
   - baseline de modelo, definición de RUL como una parte constante más lineal
